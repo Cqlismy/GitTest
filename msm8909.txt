@@ -1,0 +1,80 @@
+
+//调整printk打印级别
+# echo 1 > /proc/sys/kernel/printk
+# echo 4       4       1       7 > /proc/sys/kernel/printk
+
+# cat /proc/sys/kernel/printk
+
+//烧写
+adb reboot bootloader
+fastboot devices
+fastboot flash boot \\192.168.26.101\share\huangly\img\boot.img
+fastboot reboot
+adb root
+adb shell
+
+
+//adb push
+adb push \\192.168.0.101\share\huangly\app\helloworld /data/work
+
+adb push \\192.168.0.101\share\huangly\driver\gpio-ctrl.ko /data/work
+
+//gpio-ctrl.c驱动文件//
+//设备树接口API
+/* 获取设备节点中子节点的数量 */
+of_get_child_count()
+
+/* 遍历设备节点中的子节点 */
+for_each_child_of_node()
+
+/* 获取某个属性的值，该值为字符串 *
+of_get_property()
+
+/* 获取节点中GPIO的数量 */
+of_gpio_named_count()
+
+/* 获取一个GPIO的号码以及flag(标志) */
+of_get_named_gpio_flags()
+
+/* 读取属性的字符串值(根据index读取多个值) */
+of_property_read_string_index()
+
+/* 统计某个属性中字符串的个数 */
+of_property_count_strings()
+
+/* 读取某个属性值中的一个32bit整型到一个变量中 */
+of_property_read_u32()
+
+/* 读取某个属性值中的多个32bit整型到一个整型数组中 */
+of_property_read_u32_array()
+
+
+
+//gpio-ctrl创建设备类文件出错
+
+//和gpio相关的内核API接口函数
+/* 申请GPIO */
+gpio_request(unsigned gpio, const char *label);
+/* 设置gpio输出方向 */
+int gpio_direction_output(unsigned gpio, int value);
+/* 设置gpio的电平值 */
+void gpio_set_value(unsigned int gpio, int value);
+/* 读取gpio的电平值 */
+int gpio_get_value(unsigned int gpio);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

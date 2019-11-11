@@ -28,5 +28,28 @@ typedef struct led_device {
 	...
 } led_device_t;
 
-
-
+static int led_device_open(const struct hw_module_t *module, 
+						   const char *id, struct hw_device_t **device)
+{
+	struct led_device *dev;
+	
+	dev = malloc(sizeof(struct led_device));
+	if (!dev) {
+		ALOGE("Failed to malloc memory");
+		return -ENOMEM;
+	}
+	memset(dev, 0, sizeof(led_device));
+	
+	dev->common.tag = HARDWARE_DEVICE_TAG;
+	dev->common.version = MODULE_API_VERSION_1_0;
+	dev->common.module = (struct hw_module_t *)module;
+	
+	dev->get_led_state = get_led_state;
+	dev->set_led_state = set_led_state;
+	...
+	...
+	...
+	
+	*device = (struct hw_device_t *)dev;
+	return 0;
+}

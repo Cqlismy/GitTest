@@ -19,3 +19,14 @@ struct led_module HAL_MODULE_INFO_SYM = {
 	...
 	...
 };
+
+typedef struct led_device {
+	struct hw_device_t common;
+	int (*get_led_state)(struct led_device *dev, char **state);
+	int (*set_led_state)(struct led_device *dev, char *state);
+	...
+	...
+} led_device_t;
+
+
+

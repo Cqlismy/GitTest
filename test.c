@@ -53,3 +53,29 @@ static int led_device_open(const struct hw_module_t *module,
 	*device = (struct hw_device_t *)dev;
 	return 0;
 }
+
+gpio_keys {
+	status = "okay";
+	compatible = "gpio-keys";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	input-name = "test-keys";
+	pinctrl-names = "tlmm_gpio_key_active","tlmm_gpio_key_suspend";
+	pinctrl-0 = <&gpio_key_active>;
+	pinctrl-1 = <&gpio_key_suspend>;
+	
+	key1@1 {
+		label = "key1";
+		gpios = <&msm_gpio 96 1>;
+		linux,code = <116>;
+		linux,input-type = <1>;
+	};
+	
+	key2@2 {
+		label = "key2";
+		gpios = <&msm_gpio 98 0>;
+		linux,code = <102>;
+		linux,input-type = <1>;
+	};
+};
+

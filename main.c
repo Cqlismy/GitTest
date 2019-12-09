@@ -66,10 +66,10 @@ void kmain(void) __NO_RETURN __EXTERNALLY_VISIBLE;
 void kmain(void)
 {
 	// get us into some sort of thread context
-	thread_init_early();	/* thread早期初始化 */
+	thread_init_early();	/* thread系统早期初始化 */
 
 	// early arch stuff
-	arch_early_init();	/* arch架构早期初始化 */
+	arch_early_init();	/* arch架构相关早期初始化 */
 
 	// do any super early platform initialization
 	platform_early_init();	/* msm平台的早期初始化(board、时钟和中断控制器初始化等) */
@@ -96,7 +96,7 @@ void kmain(void)
 
 	// initialize the dpc system
 	dprintf(SPEW, "initializing dpc\n");
-	dpc_init();	/* dpc系统初始 */
+	dpc_init();	/* dpc系统相关初始化 */
 
 	// initialize kernel timers
 	dprintf(SPEW, "initializing timers\n");
@@ -107,15 +107,12 @@ void kmain(void)
 	dprintf(SPEW, "creating bootstrap completion thread\n"); /* 创建bootstrap2线程完成system初始化 */
 	thread_resume(thread_create("bootstrap2", &bootstrap2, NULL, DEFAULT_PRIORITY, DEFAULT_STACK_SIZE));
 
-	dprintf(INFO, "now is !ENABLE_NANDWRITE\n");
-
 	// enable interrupts
-	exit_critical_section();
+	exit_critical_section();	/* 使能中断 */
 
 	// become the idle thread
 	thread_become_idle();	/* 将当前线程设置为idle状态 */
 #else
-	dprintf(INFO, "now is ENABLE_NANDWRITE\n");
     bootstrap_nandwrite();
 #endif
 }

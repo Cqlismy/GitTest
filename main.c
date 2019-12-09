@@ -124,7 +124,7 @@ static int bootstrap2(void *arg)
 {
 	dprintf(SPEW, "top of bootstrap2()\n");
 
-	arch_init();	/* arch第二阶段初始化 */
+	arch_init(); /* arch处理器架构第二阶段初始化 */
 
 	// XXX put this somewhere else
 #if WITH_LIB_BIO
@@ -136,14 +136,14 @@ static int bootstrap2(void *arg)
 
 	// initialize the rest of the platform
 	dprintf(SPEW, "initializing platform\n");
-	platform_init();	/* platform第二阶段初始化(msm8909只是简单输出debug信息) */
+	platform_init(); /* platform第二阶段初始化(msm8909只是简单输出debug信息) */
 
 	// initialize the target
 	dprintf(SPEW, "initializing target\n");
-	target_init();	/* target第二阶段初始化 */
+	target_init();	/* target第二阶段初始化，按键、分区表等 */
 
 	dprintf(SPEW, "calling apps_init()\n");
-	apps_init();	/* apps初始化 */
+	apps_init();	/* 创建多个app线程并运行，aboot_init将加载Linux内核 */
 
 	return 0;
 }

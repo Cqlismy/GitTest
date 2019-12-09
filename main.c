@@ -66,10 +66,10 @@ void kmain(void) __NO_RETURN __EXTERNALLY_VISIBLE;
 void kmain(void)
 {
 	// get us into some sort of thread context
-	thread_init_early();	/* thread早期初始化 */
+	thread_init_early();	/* thread系统早期初始化 */
 
 	// early arch stuff
-	arch_early_init();	/* arch架构早期初始化 */
+	arch_early_init();	/* arch架构相关早期初始化，使能mmu等 */
 
 	// do any super early platform initialization
 	platform_early_init();	/* msm平台的早期初始化(board、时钟和中断控制器初始化等) */
@@ -96,7 +96,7 @@ void kmain(void)
 
 	// initialize the dpc system
 	dprintf(SPEW, "initializing dpc\n");
-	dpc_init();	/* dpc系统初始 */
+	dpc_init();	/* dpc系统相关初始化 */
 
 	// initialize kernel timers
 	dprintf(SPEW, "initializing timers\n");
@@ -107,15 +107,12 @@ void kmain(void)
 	dprintf(SPEW, "creating bootstrap completion thread\n"); /* 创建bootstrap2线程完成system初始化 */
 	thread_resume(thread_create("bootstrap2", &bootstrap2, NULL, DEFAULT_PRIORITY, DEFAULT_STACK_SIZE));
 
-	dprintf(INFO, "now is !ENABLE_NANDWRITE\n");
-
 	// enable interrupts
-	exit_critical_section();
+	exit_critical_section();	/* 使能中断 */
 
 	// become the idle thread
 	thread_become_idle();	/* 将当前线程设置为idle状态 */
 #else
-	dprintf(INFO, "now is ENABLE_NANDWRITE\n");
     bootstrap_nandwrite();
 #endif
 }
@@ -127,7 +124,7 @@ static int bootstrap2(void *arg)
 {
 	dprintf(SPEW, "top of bootstrap2()\n");
 
-	arch_init();	/* arch第二阶段初始化 */
+	arch_init(); /* arch处理器架构第二阶段初始化 */
 
 	// XXX put this somewhere else
 #if WITH_LIB_BIO
@@ -139,14 +136,14 @@ static int bootstrap2(void *arg)
 
 	// initialize the rest of the platform
 	dprintf(SPEW, "initializing platform\n");
-	platform_init();	/* platform第二阶段初始化(msm8909只是简单输出debug信息) */
+	platform_init(); /* platform第二阶段初始化(msm8909只是简单输出debug信息) */
 
 	// initialize the target
 	dprintf(SPEW, "initializing target\n");
-	target_init();	/* target第二阶段初始化 */
+	target_init();	/* target第二阶段初始化，按键、分区表等 */
 
 	dprintf(SPEW, "calling apps_init()\n");
-	apps_init();	/* apps初始化 */
+	apps_init();	/* 创建多个app线程并运行，aboot_init将加载Linux内核 */
 
 	return 0;
 }

@@ -69,7 +69,7 @@ void kmain(void)
 	thread_init_early();	/* thread系统早期初始化 */
 
 	// early arch stuff
-	arch_early_init();	/* arch架构相关早期初始化 */
+	arch_early_init();	/* arch架构相关早期初始化，使能mmu等 */
 
 	// do any super early platform initialization
 	platform_early_init();	/* msm平台的早期初始化(board、时钟和中断控制器初始化等) */

@@ -3306,7 +3306,6 @@ void cmd_flash_nand(const char *arg, void *data, unsigned sz)
 				memset(data + sz, 0, bytes_to_round_page);
 				sz = rounded_size;
 			}
-
 		}
 	}
 
@@ -3942,8 +3941,7 @@ void aboot_init(const struct app_descriptor *app)
 #endif
 
 	target_serialno((unsigned char *) sn_buf);
-	dprintf(SPEW,"serial number: %s\n",sn_buf);
-
+	dprintf(SPEW,"serial number: %s\n", sn_buf);
 	memset(display_panel_buf, '\0', MAX_PANEL_BUF_SIZE);
 
 	/*
@@ -3959,7 +3957,7 @@ void aboot_init(const struct app_descriptor *app)
 		dprintf(ALWAYS,"dload mode key sequence detected\n");
 		if (set_download_mode(EMERGENCY_DLOAD))
 		{
-			dprintf(CRITICAL,"dload mode not supported by target\n");
+			dprintf(CRITICAL, "dload mode not supported by target\n");
 		}
 		else
 		{
@@ -4038,7 +4036,7 @@ normal_boot:
 				#endif
 				}
 			}
-			boot_linux_from_mmc();	/* 启动linux内核 */
+			boot_linux_from_mmc();	/* 从emmc读取linux内核镜像并启动 */
 		}
 		else
 		{

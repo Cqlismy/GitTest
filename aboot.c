@@ -3915,12 +3915,10 @@ void aboot_init(const struct app_descriptor *app)
 	unsigned reboot_mode = 0;
 	bool boot_into_fastboot = false;
 
-	int i;
-	char ch;
 	/* Setup page size information for nv storage */
 	if (target_is_emmc_boot())	/* 判断目标板是否是emmc启动 */
 	{
-		page_size = mmc_page_size();
+		page_size = mmc_page_size(); /* 读取对应存储介质的page和block大小*/
 		page_mask = page_size - 1;
 		mmc_blocksize = mmc_get_device_blocksize();
 		mmc_blocksize_mask = mmc_blocksize - 1;
@@ -3934,15 +3932,14 @@ void aboot_init(const struct app_descriptor *app)
 	ASSERT((MEMBASE + MEMSIZE) > MEMBASE);
 
 	read_device_info(&device);	/* 读取设备的信息 */
-	read_allow_oem_unlock(&device);
+	read_allow_oem_unlock(&device);	/* oem解锁 */
 
-	/* Display splash screen if enabled */
+	/* Display splash screen if enabled */	/* 初始化LCD接口并显示log */
 #if DISPLAY_SPLASH_SCREEN
 	dprintf(INFO, "Display Init: Start\n");
 	target_display_init(device.display_panel);
 	dprintf(INFO, "Display Init: Done\n");
 #endif
-
 
 	target_serialno((unsigned char *) sn_buf);
 	dprintf(SPEW,"serial number: %s\n",sn_buf);
@@ -3957,7 +3954,7 @@ void aboot_init(const struct app_descriptor *app)
 		goto normal_boot;
 
 	/* Check if we should do something other than booting up */
-	if (keys_get_state(KEY_VOLUMEUP) && keys_get_state(KEY_VOLUMEDOWN))
+	if (keys_get_state(KEY_VOLUMEUP) && keys_get_state(KEY_VOLUMEDOWN)) /* 根据按键进入到不同的启动模式 */
 	{
 		dprintf(ALWAYS,"dload mode key sequence detected\n");
 		if (set_download_mode(EMERGENCY_DLOAD))
@@ -3973,7 +3970,6 @@ void aboot_init(const struct app_descriptor *app)
 	}
 	if (!boot_into_fastboot)
 	{
-		//if (keys_get_state(KEY_HOME) || keys_get_state(KEY_VOLUMEUP))
 		if (keys_get_state(KEY_HOME) || keys_get_state(KEY_BACK))
 			boot_into_recovery = 1;
 		if (!boot_into_recovery &&
@@ -4042,7 +4038,7 @@ normal_boot:
 				#endif
 				}
 			}
-			boot_linux_from_mmc();
+			boot_linux_from_mmc();	/* 启动linux内核 */
 		}
 		else
 		{

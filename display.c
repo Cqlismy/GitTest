@@ -243,57 +243,32 @@ int msm_display_init(struct msm_fb_panel_data *pdata)
 	}
 
 	/* Turn on panel */
-	if (pdata->power_func)
+	if (pdata->power_func)	/* 开启panel的电源 */
 		ret = pdata->power_func(1, &(panel->panel_info));
 
 	if (ret)
 		goto msm_display_init_out;
 
 	/* Enable clock */
-	if (pdata->clk_func)
+	if (pdata->clk_func)	/* 将dsi时钟使能 */
 		ret = pdata->clk_func(1);
 
-	/* Only enabled for auto PLL calculation */
-	if (pdata->pll_clk_func)
-		ret = pdata->pll_clk_func(1, &(panel->panel_info));
-
+	ret = msm_fb_alloc(&(panel->fb));	/* 分配显存 */
 	if (ret)
 		goto msm_display_init_out;
 
-	/* pinfo prepare  */
-	if (pdata->panel_info.prepare) {
-		/* this is for edp which pinfo derived from edid */
-		ret = pdata->panel_info.prepare();
-		panel->fb.width =  panel->panel_info.xres;
-		panel->fb.height =  panel->panel_info.yres;
-		panel->fb.stride =  panel->panel_info.xres;
-		panel->fb.bpp =  panel->panel_info.bpp;
-	}
-
-	if (ret)
-		goto msm_display_init_out;
-
-	ret = msm_fb_alloc(&(panel->fb));
-	if (ret)
-		goto msm_display_init_out;
-
-	ret = msm_display_config();
+	ret = msm_display_config();	/* 显示配置 */
 	if (ret)
 		goto msm_display_init_out;
 
 	fbcon_setup(&(panel->fb));
-	display_image_on_screen();
+	display_image_on_screen();	/* 启动log载入并显示 */
 	ret = msm_display_on();
 	if (ret)
 		goto msm_display_init_out;
 
-	if (pdata->post_power_func)
-		ret = pdata->post_power_func(1);
-	if (ret)
-		goto msm_display_init_out;
-
 	/* Turn on backlight */
-	if (pdata->bl_func)
+	if (pdata->bl_func)		/* 开启背光灯 */
 		ret = pdata->bl_func(1);
 
 	if (ret)

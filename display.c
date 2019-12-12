@@ -245,7 +245,6 @@ int msm_display_init(struct msm_fb_panel_data *pdata)
 	/* Turn on panel */
 	if (pdata->power_func)	/* 开启panel的电源 */
 		ret = pdata->power_func(1, &(panel->panel_info));
-
 	if (ret)
 		goto msm_display_init_out;
 
@@ -270,7 +269,6 @@ int msm_display_init(struct msm_fb_panel_data *pdata)
 	/* Turn on backlight */
 	if (pdata->bl_func)		/* 开启背光灯 */
 		ret = pdata->bl_func(1);
-
 	if (ret)
 		goto msm_display_init_out;
 

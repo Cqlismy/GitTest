@@ -367,12 +367,6 @@ int target_ldo_ctrl(uint8_t enable)
 {
 	if (enable)
 		regulator_enable();     /* L2, L6, and L17 */
-	//shenxj fix
-	//gpio_tlmm_config(89,0,GPIO_OUTPUT,GPIO_NO_PULL,GPIO_8MA,GPIO_DISABLE);
-	//gpio_set(89,2);
-	
-	//LCD 控制初始化
-	telpo_lcd_setup();
 
 	return NO_ERROR;
 }

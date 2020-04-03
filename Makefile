@@ -1,4 +1,4 @@
-# Makefile for test app
+# A simple Makefile for test app
 
 all:
 	gcc test.c -o test
